@@ -57,15 +57,16 @@ public class MovieDataExample3 {
     static int partition (int l, int r)
     {
 	double pivot = movies.get(r).revenue - movies.get(r).budget;
-	int i = l-1; // rightmost ind of smaller than pivot
-	for (int j=l; j<r; j++) {
+	int i = l-1; // rightmost ind of greater than pivot (greater b/c here in decending order)
+	for (int j=l; j<r; j++) { // j points to the currently explored value
 	    double profit = movies.get(j).revenue - movies.get(j).budget;
-	    if (profit > pivot) {
+	    if (profit > pivot) { // arranging in descending order
 		i++;
 		swap (i, j);
 	    }
 	}
-	swap (i+1, r); // put pivot in right position
+	swap (i+1, r); // put pivot (pointed to by r) in its  position in sorted collection
+	               // that is right after left-most value greater (here descending order) than pivot
 	return i+1; // return ind of pivot
     }
 
