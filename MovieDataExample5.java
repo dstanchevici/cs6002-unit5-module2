@@ -34,24 +34,24 @@ public class MovieDataExample5 {
 	HashSet<String> actors = makeActorNameSet ();
 	
 	// 2. Now build the list of actors, along with their movie count.
-	//long startTime = System.currentTimeMillis ();
+	long startTime = System.currentTimeMillis ();
 	
-	ArrayList<Actor> actorList = makeActorList (actors);
+	//ArrayList<Actor> actorList = makeActorList (actors);
 	
 	// Alternative:
-	// ArrayList<Actor> actorList = makeActorList2 (actors);
+	ArrayList<Actor> actorList = makeActorList2 (actors);
 	
 	
-	//long endTime = System.currentTimeMillis ();
-	//System.out.println ("time for actor-movie count: " + (endTime-startTime));
+	long endTime = System.currentTimeMillis ();
+	System.out.println ("time for actor-movie count: " + (endTime-startTime));
 	
 	// 3. Sort.
-	//startTime = System.currentTimeMillis ();
+	startTime = System.currentTimeMillis ();
 
 	sortActorList (actorList);
 
-	//endTime = System.currentTimeMillis ();
-	//System.out.println ("time for sort: " + (endTime-startTime));
+	endTime = System.currentTimeMillis ();
+	System.out.println ("time for sort: " + (endTime-startTime));
 	
 	
 	// 4. Print top 30 actors by movie count.
@@ -110,6 +110,15 @@ public class MovieDataExample5 {
 			// and "put" in map.
 
 			// WRITE YOUR CODE HERE.
+			if ( actorMap.containsKey(a) ) {
+			    actorMap.get(a).numMovies += 1;
+			}
+			else {
+			    Actor newEntry = new Actor ();
+			    newEntry.name = a;
+			    newEntry.numMovies = 1;
+			    actorMap.put (a, newEntry);
+			}
 
 		    }
 		}
