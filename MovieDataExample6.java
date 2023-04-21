@@ -9,17 +9,31 @@ class MovieData {
     ArrayList<String> actors = new ArrayList<>();
 }
 
-class Actor {
+class Actor implements Comparable {
+
     String name;
     int numMovies;
+
+    public int compareTo (Object obj) // Why not make Actor obj the parameter?
+    {
+	Actor a = (Actor) obj;
+	if (numMovies < a.numMovies) {
+	    return 1; // NOTE TO Grader: I've changed '-1' to '1' for descending order.
+	}
+	else if (numMovies > a.numMovies) {
+	    return -1; // NOTE TO Grader: I've changed '1' to '-1' for descending order.
+	}
+	else {
+	    return 0;
+	}
+    }
 }
 
 
 
-public class MovieDataExample5 {
+public class MovieDataExample6 {
 
     static ArrayList<MovieData> movies = new ArrayList<>();
-
 
     public static void main (String[] argv)
     {
@@ -28,74 +42,38 @@ public class MovieDataExample5 {
 
 	// NOTE: at this point, one could shorten the movies list 
 	// for the purposes of debugging.
-	//shortenMovieList (3);
+	// shortenMovieList (100);
 
 	// 1. Extract from the data a set of actor names.
-	// I wonder whether we even need this hashset with the second (alternative)  approach, which is based on a hashmap.
-	// I've experimented with removing this hashset, and it worked fine (faster) w/o it.
 	HashSet<String> actors = makeActorNameSet ();
-	
+	System.out.println ("# actors: " + actors.size());
+
 	// 2. Now build the list of actors, along with their movie count.
 	long startTime = System.currentTimeMillis ();
-	
-	//ArrayList<Actor> actorList = makeActorList (actors);
-	
-	// Alternative:
 	ArrayList<Actor> actorList = makeActorList2 (actors);
-	
-	
+
 	long endTime = System.currentTimeMillis ();
 	System.out.println ("time for actor-movie count: " + (endTime-startTime));
 	
 	// 3. Sort.
 	startTime = System.currentTimeMillis ();
 
-	sortActorList (actorList);
+	Collections.sort (actorList);
 
 	endTime = System.currentTimeMillis ();
 	System.out.println ("time for sort: " + (endTime-startTime));
-	
-	
+
 	// 4. Print top 30 actors by movie count.
 	int N = 30;
 	for (int i=0; i<N; i++) {
 	    Actor a = actorList.get (i);
 	    System.out.println ("#" + i + ": " + a.name + " #movies=" + a.numMovies);
 	}
-	
-	
     }
 
 
-    static void sortActorList (ArrayList<Actor> actorList)
-    {
-	// Use the Selection Sort algorithm. In doing so,
-	// use the swap() method method to swap two elements
-	// in the list.	
 
-	// WRITE YOUR CODE HERE.
-	for (int i=0; i<actorList.size()-1; i++) {
-	    for (int j=i+1; j<actorList.size(); j++) {
-		if (actorList.get(i).numMovies <= actorList.get(j).numMovies) {
-		    swap (actorList, i, j);
-		}
-	    }
-	}
-	//System.out.println (actorList.get(0).name + " " + actorList.get(0).numMovies);
-	//System.out.println (actorList.get(1).name + " " + actorList.get(1).numMovies);
-    }
-
-    static void swap (ArrayList<Actor> actorList, int i, int j)
-    {
-	// Swap the elements at locations i and j in the list by
-	// using get and set. Use this metho in sorting.
-	Actor ai = actorList.get (i);
-	Actor aj = actorList.get (j);
-	actorList.set (i, aj);
-	actorList.set (j, ai);
-    }
-
-    static ArrayList<Actor> makeActorList2 (HashSet<String> actors) // the HashSet actors is not used in this method, is it?
+    static ArrayList<Actor> makeActorList2 (HashSet<String> actors)
     {
 	// Build a HashMap of <String, Actor>.
 	HashMap<String, Actor> actorMap = new HashMap<>();
@@ -122,6 +100,7 @@ public class MovieDataExample5 {
 			    actorMap.put (a, newEntry);
 			}
 
+
 		    }
 		}
 	    }
@@ -129,35 +108,24 @@ public class MovieDataExample5 {
 
 	// Now make a list out of the map.
 	ArrayList<Actor> actorList = new ArrayList<>();
-
-	
-	for (String name: actors) { // Could we traverse the actorMap hashmap instead of traversing this hashlist? See below.
+	for (String name: actors) {
 	    Actor a = actorMap.get (name);
 	    if (a != null) {
 		actorList.add (a);
 	    }
 	}
-	
-	/*
-	for (Map.Entry<String,Actor> mapElement: actorMap.entrySet()) {
-	    Actor a = mapElement.getValue ();
-	    if (a != null) actorList.add (a);
-	}
-	*/
-	
-	
 
 	System.out.println ("List: #actors: " + actorList.size());
 	return actorList;
     }
 
 
+    /*
+    // Redundant here. Is not used in this program. It is used in 2.5.
     static ArrayList<Actor> makeActorList (HashSet<String> actors)
     {
 	ArrayList<Actor> actorList = new ArrayList<>();
 
-	int num=0;
-	
 	// Iterate through actor names in HashSet (outer loop).
 	for (String a: actors) {
 	    // Count how many movies.
@@ -184,17 +152,15 @@ public class MovieDataExample5 {
 	    actorList.add (aWithCnt);
 	    
 	    // This is just to show progress in the outer loop.
-	    /*
-	    if (count > 33) {
+	    if (count > 30) {
 		// Print actors who've made at least 30 movies.
-		System.out.println ("#" + num + ": " + a + ": #movies=" + count);
-		num++;
+		System.out.println (a + ": #movies=" + count);
 	    }
-	    */
-	} // end-outer for loop
+	}
 
 	return actorList;
     }
+    */
 
     static HashSet<String> makeActorNameSet ()
     {
@@ -233,6 +199,7 @@ public class MovieDataExample5 {
 	// Reassign to movies:
 	movies = shortList;
     }
+    
 
     static void readMovieData ()
     {
